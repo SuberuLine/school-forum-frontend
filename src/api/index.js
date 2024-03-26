@@ -18,12 +18,12 @@ function takeAccessToken() {
     if (!authObj) {
         return null;
     }
-    if (authObj.expire < Date.now()) {
+    if (new Date(authObj.expire) < Date.now()) {
         deleteAccessToken();
         ElMessage.warning('Access token expired, please login again');
         return null;
     }
-    return JSON.parse(authObj);
+    return JSON.parse(authObj).token;
 }
 
 function deleteAccessToken() {
@@ -42,7 +42,7 @@ function storeAccessToken(token, remember, expire) {
 
 const accessHeader = () => {
     return {
-        'Authorization': `Bearer ${takeAccessToken().token}`
+        'Authorization': `Bearer ${takeAccessToken()}`
     }
 }
 
@@ -87,7 +87,6 @@ function login(username, password, remember, success, failure = defaultFailure, 
 }
 
 function get(url, success, failure = defaultFailure) {
-    console.log(accessHeader());
     internalGet(url, accessHeader(), success, failure);
 }
 

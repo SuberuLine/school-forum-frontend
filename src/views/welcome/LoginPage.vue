@@ -43,7 +43,6 @@ function userLogin() {
                 <el-form-item prop="username">
                     <el-input 
                     v-model="form.username"
-                    maxlength="10" 
                     type="text" 
                     placeholder="用户名/邮箱">
                         <template #prefix>
@@ -69,7 +68,7 @@ function userLogin() {
                         </el-form-item>
                     </el-col>
                     <el-col :span="12" style="text-align: right;">
-                        <el-link type="primary">忘记密码</el-link>
+                        <el-link @click="router.push('/reset')" type="primary">忘记密码</el-link>
                     </el-col>
                 </el-row>
             </el-form>
