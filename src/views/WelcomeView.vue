@@ -16,7 +16,11 @@
             <p>后端对接Spring Boot</p>
         </div>
         <div class="right-card">
-            <RouterView />
+            <RouterView v-slot="{ Component }">
+                <transition name="el-fade-in-linear" mode="out-in">
+                    <component :is="Component" /> 
+                </transition>
+            </RouterView>
         </div>
     </div>
 </template>

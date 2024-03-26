@@ -78,7 +78,7 @@ function userLogin() {
             <el-button @click="userLogin" type="primary" style="width: 270px;" plain>登录</el-button>
         </div>
         <el-divider content-position="right" style="margin-top: 40px;">
-            还没有账号？<el-button type="text" style="color: #409EFF;">立即注册</el-button>
+            还没有账号？<el-button @click="router.push('/register')" type="text" style="color: #409EFF;">立即注册</el-button>
         </el-divider>
     </div>
 </template>

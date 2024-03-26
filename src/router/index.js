@@ -13,6 +13,10 @@ const router = createRouter({
                     path: '',
                     name: 'welcome-login',
                     component: () => import('@/views/welcome/LoginPage.vue')
+                },{
+                    path: '/register',
+                    name: 'welcome-register',
+                    component: () => import('@/views/welcome/RegisterPage.vue')
                 }
             ]
         }, {
@@ -23,15 +27,15 @@ const router = createRouter({
     ]
 })
 
-router.beforeEach((to, from, next) => {
-    const isUnauthorized = unAuthorized()
-    if (isUnauthorized && to.name !== 'welcome-login') {
-        next({ name: 'welcome-login' })
-    } else if (!isUnauthorized && to.name === 'welcome-login') {
-        next({ name: 'index' })
-    } else {
-        next()
-    }
-})
+// router.beforeEach((to, from, next) => {
+//     const isUnauthorized = unAuthorized()
+//     if (isUnauthorized && to.name !== 'welcome-login') {
+//         next({ name: 'welcome-login' })
+//     } else if (!isUnauthorized && to.name === 'welcome-login') {
+//         next({ name: 'index' })
+//     } else {
+//         next()
+//     }
+// })
 
 export default router
