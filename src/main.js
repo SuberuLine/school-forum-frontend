@@ -4,9 +4,10 @@ import router from '@/router'
 import axios from 'axios'
 import 'element-plus/dist/index.css'
 import 'element-plus/theme-chalk/dark/css-vars.css'
+import { createPinia } from "pinia";
 
 axios.defaults.baseURL = 'http://localhost:8081'
 
 const app = createApp(App)
 
-app.use(router).mount('#app')
+app.use(router).use(createPinia()).mount('#app')
