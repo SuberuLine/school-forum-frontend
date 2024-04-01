@@ -81,6 +81,45 @@ get('/api/user/details', data => {
   emailForm.email = store.user.email
   loading.form = false
 })
+
+let coldTime = ref(0)
+const isEmailValid = ref(true)
+const onValidate = (prop, isValid) => {
+  if(prop === 'email')
+    isEmailValid.value = isValid
+}
+function sendEmailCode() {
+  emailFormRef.value.validate(isValid => {
+    if (isValid) {
+      coldTime.value = 60
+      get(`/api/auth/request-code?email=${emailForm.email}&type=modify`, () => {
+        ElMessage.success(`验证码已成功发送到邮箱：${emailForm.email}，请注意查收`)
+        const handle = setInterval(() => {
+          coldTime.value--
+          if (coldTime.value === 0) {
+            clearInterval(handle)
+          }
+        }, 1000)
+      }, (message) => {
+        ElMessage.warning(message)
+        coldTime.value = 0
+      })
+    }
+  })
+}
+
+function modifyEmail() {
+  emailFormRef.value.validate(isValid => {
+    if (isValid) {
+      post('/api/user/modify-email', emailForm, () => {
+        ElMessage.success('邮件修改成功！')
+        store.user.email = emailForm.email
+        emailForm.code = ''
+      })
+    }
+  })
+
+}
 </script>
 
 <template>
@@ -93,8 +132,8 @@ get('/api/user/details', data => {
           </el-form-item>
           <el-form-item label="性别" prop="gender">
             <el-radio-group v-model="baseForm.gender">
-              <el-radio label="0">男</el-radio>
-              <el-radio label="1">女</el-radio>
+              <el-radio :label="0">男</el-radio>
+              <el-radio :label="1">女</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="手机号" prop="phone">
@@ -103,8 +142,8 @@ get('/api/user/details', data => {
           <el-form-item label="QQ号" prop="qq">
             <el-input v-model="baseForm.qq" maxlength="13"/>
           </el-form-item>
-          <el-form-item label="微信号" prop="vx">
-            <el-input v-model="baseForm.vx" maxlength="20"/>
+          <el-form-item label="微信号" prop="wx">
+            <el-input v-model="baseForm.wx" maxlength="20"/>
           </el-form-item>
           <el-form-item label="个人简介" prop="desc">
             <el-input v-model="baseForm.desc" type="textarea" :rows="6"/>
@@ -117,7 +156,7 @@ get('/api/user/details', data => {
         </el-form>
       </card>
       <card style="margin-top: 10px" :icon="Message" title="电子邮件设置" desc="您可以在这里修改默认绑定的电子邮件地址">
-        <el-form ref="emailFormRef" :rules="rules" :model="emailForm" label-position="top" style="margin: 0 10px 10px 10px">
+        <el-form ref="emailFormRef" @validate="onValidate" :rules="rules" :model="emailForm" label-position="top" style="margin: 0 10px 10px 10px">
           <el-form-item label="电子邮件" prop="email">
             <el-input v-model="emailForm.email"/>
           </el-form-item>
@@ -127,12 +166,14 @@ get('/api/user/details', data => {
                 <el-input placeholder="请获取验证码" :gutter="10" v-model="emailForm.code"/>
               </el-col>
               <el-col :span="6">
-                <el-button type="success" plain style="width: 100%">获取验证码</el-button>
+                <el-button type="success" plain style="width: 100%" @click="sendEmailCode" :disabled="!isEmailValid || coldTime > 0">
+                  {{ coldTime > 0 ? `请稍后${coldTime}秒` : '获取验证码'}}
+                </el-button>
               </el-col>
             </el-row>
           </el-form-item>
           <div>
-            <el-button :icon="Refresh">
+            <el-button :icon="Refresh" @click="modifyEmail">
               更新邮件信息
             </el-button>
           </div>
