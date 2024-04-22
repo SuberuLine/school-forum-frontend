@@ -85,7 +85,8 @@ function userLogout() {
         <el-aside width="230px">
           <el-menu
               router
-              default-active="$router.path"
+              :default-active="$route.path"
+              :default-openeds="['1', '2', '3']"
               style="height: 100%"
           >
             <el-scrollbar style="height: calc(100vh - 55px)">
@@ -94,7 +95,7 @@ function userLogout() {
                   <el-icon><Location/></el-icon>
                   <span><b>校园论坛</b></span>
                 </template>
-                <el-menu-item index="1-1">
+                <el-menu-item index="/index">
                   <template #title>
                     <el-icon><ChatDotSquare/></el-icon>
                     帖子广场
