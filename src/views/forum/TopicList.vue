@@ -4,8 +4,9 @@ import {Calendar, CollectionTag, EditPen, Link} from "@element-plus/icons-vue";
 import Weather from "@/components/Weather.vue";
 import {computed} from "vue";
 import {ElMessage} from "element-plus";
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
 import {get} from "@/api/index.js";
+import TopicEditor from "@/components/TopicEditor.vue";
 
 const weather = reactive({
   location: {},
@@ -13,6 +14,8 @@ const weather = reactive({
   hourly: [],
   success: false
 })
+
+const editor = ref(false)
 
 const today = computed(() => {
   const date = new Date()
@@ -43,7 +46,7 @@ navigator.geolocation.getCurrentPosition(position => {
   <div style="display: flex; margin: 20px auto; gap: 20px; max-width: 900px" >
     <div style="flex: 1">
       <light-card>
-        <div class="create-topic">
+        <div class="create-topic" @click="editor = true">
           <el-icon><EditPen/></el-icon>发表帖子
         </div>
       </light-card>
@@ -110,6 +113,7 @@ navigator.geolocation.getCurrentPosition(position => {
         </div>
       </div>
     </div>
+    <topic-editor :show="editor" @close="editor=false"/>
   </div>
 </template>
 
@@ -133,8 +137,12 @@ navigator.geolocation.getCurrentPosition(position => {
   color: grey;
   line-height: 40px;
   padding: 0 10px;
+
   &:hover {
     cursor: pointer;
   }
+}
+.dark .create-topic {
+  background-color: #232323;
 }
 </style>
