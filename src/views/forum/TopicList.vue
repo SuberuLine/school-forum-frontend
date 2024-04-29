@@ -54,7 +54,7 @@ navigator.geolocation.getCurrentPosition(position => {
 
       </light-card>
       <div style="margin-top: 10px; display: flex; flex-direction: column;gap: 10px">
-        <light-card style="height: 100px" v-for="item in 10">
+        <light-card style="height: 100px">
 
         </light-card>
       </div>
@@ -113,7 +113,7 @@ navigator.geolocation.getCurrentPosition(position => {
         </div>
       </div>
     </div>
-    <topic-editor :show="editor" @close="editor=false"/>
+    <topic-editor :show="editor" @success="editor = false" @close="editor=false"/>
   </div>
 </template>
 
