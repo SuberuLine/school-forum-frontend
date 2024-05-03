@@ -9,6 +9,7 @@ import axios from "axios";
 import {accessHeader, post} from "@/api/index.js";
 import {ElMessage} from "element-plus";
 import {get} from "@/api/index.js";
+import ColorDot from "@/components/ColorDot.vue";
 
 defineProps({
   show: Boolean
@@ -40,7 +41,7 @@ function submitTopic() {
     return
   }
   post('/api/forum/create-topic', {
-    type: editor.type,
+    type: editor.type.id,
     title: editor.title,
     content: editor.text
   }, () => {
@@ -140,13 +141,22 @@ const editorOption = {
       </template>
       <div style="display: flex; gap: 10px">
         <div style="width: 150px">
-          <el-select v-model="editor.type" placeholder="选择帖子类型" :disabled="editor.types.length === 0">
-            <el-option v-for="item in editor.types" :value="item.id" :label="item.name" />
+          <el-select v-model="editor.type" placeholder="选择帖子类型" value-key="id" :disabled="!editor.types.length">
+            <el-option v-for="item in editor.types" :value="item" :label="item.name">
+              <div>
+                <color-dot :color="item.color"/>
+                <span style="margin-left: 10px">{{item.name}}</span>
+              </div>
+            </el-option>
           </el-select>
         </div>
         <div style="flex: 1">
           <el-input v-model="editor.title" placeholder="请输入帖子标题" :prefix-icon="Document" maxlength="30" style="height: 100%"/>
         </div>
+      </div>
+      <div style="margin-top: 5px;font-size: 13px;color: grey">
+        <color-dot :color="editor.type ? editor.type.color : '#dedede'"/>
+        <span style="margin-left: 5px">{{editor.type ? editor.type.desc : '请在上方选择一个帖子类型'}}</span>
       </div>
       <div style="margin: 15px; height: 460px; overflow: hidden" v-loading="editor.uploading" element-loading-text="正在上传图片中，请稍等。。">
         <quill-editor v-model:content="editor.text"
