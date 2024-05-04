@@ -8,13 +8,14 @@ import { ImageExtend, QuillWatch } from "quill-image-super-solution-module";
 import axios from "axios";
 import {accessHeader, post} from "@/api/index.js";
 import {ElMessage} from "element-plus";
-import {get} from "@/api/index.js";
 import ColorDot from "@/components/ColorDot.vue";
+import {useStore} from "@/store/index.js";
 
 defineProps({
   show: Boolean
 })
 
+const store = useStore()
 const emit = defineEmits(['close', 'success'])
 const refEditor = ref()
 
@@ -22,8 +23,7 @@ const editor = reactive({
   type: null,
   title: '',
   text: '',
-  uploading: false,
-  types: []
+  uploading: false
 })
 
 function submitTopic() {
@@ -47,6 +47,9 @@ function submitTopic() {
   }, () => {
     ElMessage.success('帖子发表成功')
     emit('success')
+    setTimeout(() => {
+      location.reload()
+    }, 1000)
   })
 }
 
@@ -67,8 +70,6 @@ function deltaToText(delta) {
 const contentLength = computed(() => {
   deltaToText(editor.text).length
 })
-
-get('/api/forum/types', data => editor.types = data)
 
 Quill.register('modules/imageResize', ImageResize)
 Quill.register('modules/ImageExtend', ImageExtend)
@@ -141,8 +142,8 @@ const editorOption = {
       </template>
       <div style="display: flex; gap: 10px">
         <div style="width: 150px">
-          <el-select v-model="editor.type" placeholder="选择帖子类型" value-key="id" :disabled="!editor.types.length">
-            <el-option v-for="item in editor.types" :value="item" :label="item.name">
+          <el-select v-model="editor.type" placeholder="选择帖子类型" value-key="id" :disabled="!store.forum.types.length">
+            <el-option v-for="item in store.forum.types.filter(type => type.id > 0)" :value="item" :label="item.name">
               <div>
                 <color-dot :color="item.color"/>
                 <span style="margin-left: 10px">{{item.name}}</span>
