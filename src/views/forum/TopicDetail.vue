@@ -23,6 +23,8 @@ const topic = reactive({
 
 get(`api/forum/topic?tid=${tid}`, data => {
   topic.data = data
+  topic.like = data.interact.like
+  topic.collect = data.interact.collect
 })
 
 function convertToHtml(content) {
@@ -37,7 +39,7 @@ function interact(type, message) {
     if(topic[type])
       ElMessage.success(`${message}成功！`)
     else
-      ElMessage.success(`已${message}成功`)
+      ElMessage.success(`已取消${message}`)
   })
 }
 </script>
@@ -81,6 +83,10 @@ function interact(type, message) {
       <div class="topic-main-right">
         <div class="topic-content" v-html="convertToHtml(topic.data.content)"> </div>
         <div style="text-align: right; margin-top: 30px">
+          <el-divider/>
+          <div style="font-size: 13px;color: grey;text-align: center">
+            <div>发帖时间: {{new Date(topic.data.time).toLocaleString()}}</div>
+          </div>
           <interact-button name="点赞" color="pink" check-name="已点赞" :check="topic.like"
                            @check="interact('like', '点赞')">
             <el-icon><CircleCheck/></el-icon>
