@@ -259,7 +259,8 @@ navigator.geolocation.getCurrentPosition(position => {
     opacity: 0.8;
     transition: color .3s;
 
-    &.hover {
+    &:hover {
+      cursor: pointer;
       color: grey;
     }
   }
@@ -356,7 +357,7 @@ navigator.geolocation.getCurrentPosition(position => {
       border: solid 1px #64594b;
     }
 
-    &.hover {
+    &:hover {
       background-color: #5e5e5e;
     }
   }

@@ -1,7 +1,7 @@
 <script setup>
 import {Check, Document} from "@element-plus/icons-vue";
 import {reactive, ref, computed} from "vue";
-import {Quill, QuillEditor} from "@vueup/vue-quill";
+import {Delta, Quill, QuillEditor} from "@vueup/vue-quill";
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import ImageResize from "quill-image-resize-vue";
 import { ImageExtend, QuillWatch } from "quill-image-super-solution-module";
@@ -11,8 +11,41 @@ import {ElMessage} from "element-plus";
 import ColorDot from "@/components/ColorDot.vue";
 import {useStore} from "@/store/index.js";
 
-defineProps({
-  show: Boolean
+const props = defineProps({
+  show: Boolean,
+  defaultTitle: {
+    default: '',
+    type: String
+  },
+  defaultText: {
+    default: '',
+    type: String
+  },
+  defaultType: {
+    default: null,
+    type: Number
+  },
+  defaultButton: {
+    default: '立即发表主题',
+    type: String
+  },
+  submitButton: {
+    default: '立即发表主题',
+    type: String
+  },
+  submit: {
+    default: (editor, success) => {
+      post('/api/forum/create-topic', {
+        type: editor.type.id,
+        title: editor.title,
+        content: editor.text
+      }, () => {
+        ElMessage.success("帖子发表成功！")
+        success()
+      })
+    },
+    type: Function
+  }
 })
 
 const store = useStore()
@@ -40,23 +73,23 @@ function submitTopic() {
     ElMessage.warning('请选择一个帖子类型')
     return
   }
-  post('/api/forum/create-topic', {
-    type: editor.type.id,
-    title: editor.title,
-    content: editor.text
-  }, () => {
-    ElMessage.success('帖子发表成功')
-    emit('success')
-    setTimeout(() => {
-      location.reload()
-    }, 1000)
-  })
+  props.submit(editor, () => emit('success'))
 }
 
 function initEditor() {
-  refEditor.value.setContents('', 'user')
-  editor.title = ''
-  editor.type = null
+  if(props.defaultText)
+    editor.text = new Delta(JSON.parse(props.defaultText))
+  else
+    refEditor.value.setContents('', 'user')
+  editor.title = props.defaultTitle
+  editor.type = findTypeById(props.defaultType)
+}
+
+function findTypeById(id){
+  for (let type of store.forum.types) {
+    if(type.id === id)
+      return type
+  }
 }
 
 function deltaToText(delta) {
@@ -67,9 +100,7 @@ function deltaToText(delta) {
   return str.replace(/\s/g, "")
 }
 
-const contentLength = computed(() => {
-  deltaToText(editor.text).length
-})
+const contentLength = computed(() => deltaToText(editor.text).length)
 
 Quill.register('modules/imageResize', ImageResize)
 Quill.register('modules/ImageExtend', ImageExtend)
@@ -172,7 +203,7 @@ const editorOption = {
           当前字数  {{contentLength}} （还剩余 888 字）
         </div>
         <div>
-          <el-button type="success" :icon="Check" @click="submitTopic" plain>立即发表主题</el-button>
+          <el-button type="success" :icon="Check" @click="submitTopic" plain>{{submitButton}}</el-button>
         </div>
       </div>
     </el-drawer>
