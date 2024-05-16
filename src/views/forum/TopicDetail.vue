@@ -153,7 +153,7 @@ function deleteComment(id) {
       <div v-if="topic.comments">
         <div class="topic-main" style="margin-top: 10px" v-for="item in topic.comments">
           <div class="topic-main-left">
-            <el-avatar :src="store.avatarUserUrl(item.user.avatar)" v-if="item.user.avatar" :size="60"/>
+            <el-avatar :src="store.avatarUserUrl(item.user.avatar)" :size="60"/>
             <div>
               <div style="font-size: 18px;font-weight: bold">
                 {{item.user.username}}
