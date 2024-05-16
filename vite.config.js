@@ -8,10 +8,10 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/forum',
+  base: '/school-forum-frontend',
   publicDir: 'public',
   build: {
-    outDir: 'docs',
+    outDir: 'forum',
   },
   plugins: [
     vue(),
