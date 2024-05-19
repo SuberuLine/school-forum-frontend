@@ -22,6 +22,11 @@ const router = createRouter({
                     path: '/reset',
                     name: 'welcome-reset',
                     component: () => import('@/views/welcome/ResetPage.vue')
+                },
+                {
+                    path: '/oauth/redirect',
+                    name: 'oauth-redirect',
+                    component: () => import('@/views/welcome/OauthRedirect.vue')
                 }
             ]
         }, {

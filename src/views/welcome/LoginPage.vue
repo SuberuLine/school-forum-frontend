@@ -1,8 +1,9 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import { User, Lock } from '@element-plus/icons-vue';
-import { login } from '@/api';
+import {login} from '@/api';
 import router from '@/router';
+import axios from "axios";
 
 const formRef = ref();
 
@@ -28,6 +29,12 @@ function userLogin() {
         }
     });
 }
+
+const loginWithGitHub = () => {
+  // window.location.href = 'https://github.com/login/oauth/authorize?client_id=Ov23li2Loh9VQbAgFej7&redirect_uri=http://localhost:5173/oauth/redirect&scope=read:user%20user:email&state=login';
+  window.location.href = axios.defaults.baseURL + '/oauth2/authorization/github'
+  // router.push("/oauth/redirect")
+};
 </script>
 
 <template>
@@ -73,7 +80,12 @@ function userLogin() {
                 </el-row>
             </el-form>
         </div>
-        <div style="margin-top: 40px;">
+        <div style="text-align: right">
+          <svg-icon iconName="icon-github" isButton="true" @click="loginWithGitHub"></svg-icon>
+          <svg-icon iconName="icon-QQ" isButton="true"></svg-icon>
+          <svg-icon iconName="icon-weixin" isButton="true"></svg-icon>
+        </div>
+        <div style="margin-top: 20px;">
             <el-button @click="userLogin" type="primary" style="width: 270px;" plain>登录</el-button>
         </div>
         <el-divider content-position="right" style="margin-top: 40px;">

@@ -42,7 +42,7 @@ const validateUsername = (rule, value, callback) => {
 const rules = {
   username: [
     { validator: validateUsername, trigger: ['blur', 'change'] },
-    { min: 2, max: 8, message: '用户名的长度必须在2-8个字符之间', trigger: ['blur', 'change'] },
+    { min: 2, max: 16, message: '用户名的长度必须在2-16个字符之间', trigger: ['blur', 'change'] },
   ],
   email: [
     { required: true, message: '请输入邮件地址', trigger: 'blur' },
@@ -140,12 +140,12 @@ function uploadSuccess(response) {
 </script>
 
 <template>
-  <div style="display: flex; max-width: 950px; margin: auto">
+  <div style="display: flex; max-width: 950px; margin: auto" >
     <div class="setting-left">
       <card :icon="User" title="账号信息设置" desc="在这里编辑您的个人信息，您可以在隐私中设置是否选择这些信息" v-loading="loading.form">
         <el-form ref="baseFormRef" :model="baseForm" :rules="rules" label-position="top" style="margin: 0 10px 10px 10px;">
           <el-form-item label="用户名" prop="username">
-            <el-input v-model="baseForm.username" maxlength="10"/>
+            <el-input v-model="baseForm.username" maxlength="16"/>
           </el-form-item>
           <el-form-item label="性别" prop="gender">
             <el-radio-group v-model="baseForm.gender">

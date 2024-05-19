@@ -106,4 +106,11 @@ function unAuthorized() {
     return !takeAccessToken();
 }
 
-export { login, logout, get, post, unAuthorized, accessHeader }
+function OAuthLogin(access_token) {
+    if (access_token) {
+        if (sessionStorage.getItem(authItemName)) localStorage.removeItem(authItemName)
+        sessionStorage.setItem(authItemName, JSON.stringify(access_token));
+    }
+}
+
+export { login, logout, get, post, unAuthorized, accessHeader, OAuthLogin }
